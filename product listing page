@@ -1,0 +1,145 @@
+// Product Listing Page (ProductListingPage.js)
+
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import Header from './Header'; 
+
+const plants = [
+  { id: 1, name: 'Snake Plant', price: 25, category: 'Low Maintenance', image: 'snake_plant.jpg' },
+  { id: 2, name: 'Pothos', price: 15, category: 'Easy Care', image: 'pothos.jpg' },
+  { id: 3, name: 'Fiddle Leaf Fig', price: 50, category: 'Showstopping', image: 'fiddle_leaf_fig.jpg' },
+  { id: 4, name: 'Monstera', price: 35, category: 'Trending', image: 'monstera.jpg' },
+  { id: 5, name: 'ZZ Plant', price: 20, category: 'Drought Tolerant', image: 'zz_plant.jpg' },
+  { id: 6, name: 'Peace Lily', price: 28, category: 'Air Purifying', image: 'peace_lily.jpg' },
+];
+
+const ProductListingPage = () => {
+  const [cartItems, setCartItems] = useState([]);
+
+  const handleAddToCart = (plant) => {
+    setCartItems([...cartItems, plant]);
+  };
+
+  return (
+    <div>
+      <Header cartItems={cartItems} /> 
+      <h1>Our Plant Collection</h1>
+
+      <div>
+        <h2>Low Maintenance</h2>
+        <div className="plant-grid">
+          {plants
+            .filter((plant) => plant.category === 'Low Maintenance')
+            .map((plant) => (
+              <div key={plant.id} className="plant-card">
+                <img src={plant.image} alt={plant.name} />
+                <h3>{plant.name}</h3>
+                <p>${plant.price.toFixed(2)}</p>
+                <button 
+                  disabled={cartItems.some((item) => item.id === plant.id)} 
+                  onClick={() => handleAddToCart(plant)}
+                >
+                  Add to Cart
+                </button>
+              </div>
+            ))}
+        </div>
+      </div>
+
+      {/* Similar sections for other categories (Easy Care, Showstopping, etc.) */}
+
+      <Link to="/cart">Go to Cart</Link> 
+    </div>
+  );
+};
+
+export default ProductListingPage;
+
+// Shopping Cart Page (ShoppingCartPage.js)
+
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import Header from './Header'; 
+
+const ShoppingCartPage = ({ cartItems }) => {
+  const [updatedCartItems, setUpdatedCartItems] = useState(cartItems);
+
+  const handleIncrease = (plant) => {
+    const updatedItems = updatedCartItems.map((item) =>
+      item.id === plant.id ? { ...item, quantity: item.quantity + 1 } : item
+    );
+    setUpdatedCartItems(updatedItems);
+  };
+
+  const handleDecrease = (plant) => {
+    const updatedItems = updatedCartItems.map((item) =>
+      item.id === plant.id && item.quantity > 1
+        ? { ...item, quantity: item.quantity - 1 }
+        : item
+    );
+    setUpdatedCartItems(updatedItems);
+  };
+
+  const handleDelete = (plant) => {
+    setUpdatedCartItems(updatedCartItems.filter((item) => item.id !== plant.id));
+  };
+
+  const totalItems = updatedCartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const totalPrice = updatedCartItems.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+
+  return (
+    <div>
+      <Header cartItems={updatedCartItems} /> 
+      <h1>Shopping Cart</h1>
+
+      {updatedCartItems.length === 0 ? (
+        <p>Your cart is empty.</p>
+      ) : (
+        <>
+          <p>Total Items: {totalItems}</p>
+          <p>Total Price: ${totalPrice.toFixed(2)}</p>
+          <button>Checkout (Coming Soon)</button> 
+          <Link to="/">Continue Shopping</Link> 
+
+          <ul>
+            {updatedCartItems.map((plant) => (
+              <li key={plant.id}>
+                <img src={plant.image} alt={plant.name} />
+                {plant.name} - ${plant.price.toFixed(2)}
+                <button onClick={() => handleIncrease(plant)}>+</button>
+                <span>{plant.quantity}</span>
+                <button onClick={() => handleDecrease(plant)}>-</button>
+                <button onClick={() => handleDelete(plant)}>Delete</button>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default ShoppingCartPage;
+
+// Header Component (Header.js)
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const Header = ({ cartItems }) => {
+  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  return (
+    <header>
+      <Link to="/">Home</Link> 
+      <Link to="/cart">
+        Cart ({totalItems}) 
+      </Link>
+    </header>
+  );
+};
+
+export default Header;
