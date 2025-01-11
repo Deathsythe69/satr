@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Recommendation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome to the Travel Recommendation Website</h1>
+    <input type="text" id="search-bar" placeholder="Search destinations...">
+  </header>
+
+  <main>
+    <!-- Recommendation Section -->
+    <section id="recommendations">
+      <h2>Personalized Recommendations</h2>
+      <div id="destination-list">
+        <!-- Dynamically generated list of recommended destinations will appear here -->
+      </div>
+    </section>
+
+    <!-- Destination Details Section -->
+    <section id="destination-details">
+      <h2>Destination Details</h2>
+      <div id="destination-image-container">
+        <img id="destination-image" src="image1.jpg" alt="destination image">
+        <button id="prev-button">Prev</button>
+        <button id="next-button">Next</button>
+      </div>
+      <p id="destination-description"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Travel Recommendation Website</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
